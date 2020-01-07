@@ -1,0 +1,28 @@
+<h1>Adicionar Item</h1>
+<form action="/loja" method="POST">
+    <div>
+        <label for="">Nome: </label>
+        <input type="text" name="produto[nome]">
+    </div>
+    <div>
+        <label for="">Preço: </label>
+        <input type="text" name="produto[preco]">
+    </div>
+    <div>
+        <label for="">Quantidade: </label>
+        <input type="text" name="produto[quantidade]">
+    </div>
+    <div>
+        <label for="">Data: </label>
+        <input type="date" name="produto[data]">
+    </div>
+    <div>
+        <label for="">Descrição: </label>
+        <textarea name="produto[descricao]" id="" cols="30" rows="10"></textarea>
+    </div>
+    <div>
+        <label for="">Url da Imagem: </label>
+        <input type="text" name="produto[image]">
+    </div>
+    <button>Enviar</button>
+</form>
