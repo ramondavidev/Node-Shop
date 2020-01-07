@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate') -%>
+
+<h1>Loja</h1>
+
+<div class="container">
+    <div class="row">
+
+<% produtos.forEach(function(produto){ %>
+    <div class="col-lg-4">
+            <div class="card" style="width: 18rem;">
+                    <img src="<%= produto.image %>" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= produto.nome %></h5>
+                      <p class="card-text"><%= produto.descricao %></p>
+                      <p class="card-text"><%= produto.preco %>$</p>
+                      <a href="/loja/<%= produto._id %>" class="btn btn-primary">Ver</a>
+                    </div>
+                </div>
+    </div>
+<% }) %>
+
+    </div>
+</div>

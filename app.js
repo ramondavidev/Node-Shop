@@ -1,9 +1,11 @@
 const createError = require('http-errors');
 const express = require('express');
+const engine = require('ejs-mate');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
 const indexRouter = require('./routes/index');
 const lojaRouter = require('./routes/loja');
@@ -20,7 +22,7 @@ db.once('open', function() {
   console.log('Banco de dados conectado!');
 });
 
-
+app.engine('ejs', engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -30,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
 app.use('/loja', lojaRouter);

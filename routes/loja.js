@@ -4,11 +4,11 @@ const Produto = require('../models/produto');
 
 router.get('/', async function(req, res, next) {
   let produtos = await Produto.find({});
-  res.render('loja', {produtos});
+  res.render('produto/loja', {produtos});
 });
 
 router.get('/adicionar-item', function(req, res, next) {
-  res.render('adicionar');
+  res.render('produto/adicionar');
 });
 
 router.post('/', async function(req, res, next) {
@@ -19,19 +19,22 @@ router.post('/', async function(req, res, next) {
 
 router.get('/:id', async function(req, res, next) {
   let produto = await Produto.findById(req.params.id);
-  res.render('show', {produto});
+  res.render('produto/show', {produto});
 });
 
-router.get('/:id/edit', function(req, res, next) {
-  
+router.get('/:id/edit', async function(req, res, next) {
+  let produto = await Produto.findById(req.params.id);
+  res.render('produto/edit', {produto});
 });
 
-router.put('/:id', function(req, res, next) {
-  
+router.put('/:id', async function(req, res, next) {
+  await Produto.findByIdAndUpdate(req.params.id, req.body.produto);
+  res.redirect('/loja/' + req.params.id);
 });
 
-router.delete('/', function(req, res, next) {
-  
+router.delete('/:id', async function(req, res, next) {
+  await Produto.findByIdAndRemove(req.params.id);
+  res.redirect('/loja');
 });
 
 module.exports = router;
