@@ -43,12 +43,21 @@
                 </form>
               </ul>
                 <ul class="navbar-nav ml-auto mr-3">
-                  <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-user-plus"></i> Registrar</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/#"><i class="fas fa-sign-in-alt"></i> Entrar</a>
-                  </li>
+                  <% if (!currentUser){ %>
+                    <li class="nav-item">
+                      <a class="nav-link" href="register"><i class="fas fa-user-plus"></i> Registrar</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+                    </li>
+                  <% }else{ %>
+                    <li class="nav-item">
+                      <a class="nav-link"> <%= currentUser.username %></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </li>
+                    <% } %>
                 </ul>
             </div>
           </nav>

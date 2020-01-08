@@ -1,0 +1,54 @@
+<% layout('layouts/boilerplate') -%>
+
+<h1>
+    Registrar
+</h1>
+
+<form action="/register" method="POST">
+    <div>
+        <label for="">Username:</label>
+        <input type="text" name="username">
+    </div>
+    <div>
+        <label for="">Sobrenome:</label>
+        <input type="text" name="sobrenome">
+    </div>
+    <div>
+        <label for="">Email:</label>
+        <input type="text" name="email">
+    </div>
+    <div>
+        <label for="">Senha:</label>
+        <input type="password" name="password">
+    </div>
+    <div>
+        <label for="">CPF:</label>
+        <input type="text" name="cpf">
+    </div>
+
+    <div>
+        <div>
+            <label for="">Bairro: </label>
+            <input type="text" name="endereco[bairro]">
+        </div>
+        <div>
+            <label for="">Rua: </label>
+            <input type="text" name="endereco[rua]">
+        </div>
+        <div>
+            <label for="">Numero: </label>
+            <input type="text" name="endereco[numero]">
+        </div>
+        <div>
+            <label for="">Telefone: </label>
+            <input type="text" name="endereco[telefone]">
+        </div>
+        <div>
+            <label for="">Cidade: </label>
+            <input type="text" name="endereco[cidade]">
+        </div>
+    </div>
+    
+    </div>
+    <button>Registrar</button>
+</form>

@@ -4,6 +4,8 @@ const engine = require('ejs-mate');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const passport = require('passport');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 
@@ -11,6 +13,8 @@ const indexRouter = require('./routes/index');
 const lojaRouter = require('./routes/loja');
 
 const app = express();
+
+const User = require('./models/user');
 
 mongoose.connect('mongodb://localhost:27017/electroshop', {
 useUnifiedTopology: true,
@@ -25,8 +29,6 @@ db.once('open', function() {
 });
 
 
-
-
 app.engine('ejs', engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,6 +40,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
+
+
+//Configure Passport and Sessions
+app.use(session({
+  secret: 'hang ten dude!',
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(function(req, res, next){
+  res.locals.currentUser = req.user;
+  next();
+});
+
 
 app.use('/', indexRouter);
 app.use('/loja', lojaRouter);
