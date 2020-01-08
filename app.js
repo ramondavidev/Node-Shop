@@ -12,15 +12,20 @@ const lojaRouter = require('./routes/loja');
 
 const app = express();
 
-
-//conectar banco de dado
-mongoose.connect('mongodb://localhost:27017/electroshop', {useNewUrlParser: true, useCreateIndex: true});
+mongoose.connect('mongodb://localhost:27017/electroshop', {
+useUnifiedTopology: true,
+useNewUrlParser: true,
+useCreateIndex: true
+});
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('Banco de dados conectado!');
 });
+
+
+
 
 app.engine('ejs', engine);
 // view engine setup
