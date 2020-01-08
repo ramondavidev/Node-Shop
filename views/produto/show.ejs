@@ -2,15 +2,27 @@
 
 <h1>Show Page</h1>
 
-<%= produto.nome %>
-<img src="<%= produto.image %>" style="width: 400px;" alt="">
-<%= produto.preco %>
-<%= produto.quantidade %>
-<%= produto.descricao %>
+
+
+
+
+
 <%= produto.data %>
 
-<a href="/loja/<%= produto.id %>/edit" class="btn btn-warning">Editar</a>
-
-<form action="/loja/<%= produto.id %>?_method=DELETE" method="POST">
-    <button class="btn btn-danger">Deleter</button>
-</form>
+<div class="card" style="width: 85%; margin: auto;">
+    <div class="card-header">
+      Produto
+    </div>
+    <div class="card-body" style="margin: auto;">
+      <h3 class="card-title"><%= produto.nome %></h3>
+      <img src="<%= produto.image %>" style="width: 400px;" alt="">
+      <p class="card-text"><%= produto.descricao %></p>
+      <p class="card-text">Quantidade:<Strong> <%= produto.quantidade %></Strong> </p>
+      <p class="card-text">Preço:  <Strong><%= produto.preco %>$</Strong></p>
+      <a href="#" class="btn btn-success">Comprar</a>
+      <a href="/loja/<%= produto.id %>/edit" class="btn btn-warning">Editar</a>
+      <form style="display: inline;" action="/loja/<%= produto.id %>?_method=DELETE" method="POST">
+        <button class="btn btn-danger">Deleter</button>
+      </form>
+    </div>
+  </div>
