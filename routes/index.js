@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const passport = require('passport');
+const Produto = require('../models/produto');
+const Cart = require('../models/cart');
 const User = require('../models/user');
 
 /* GET home page. */
@@ -51,6 +53,31 @@ router.post('/login', async (req, res, next)=> {
 router.get('/logout', (req, res, next) => {
 	req.logout();
 	  res.redirect('/');
-  });
+});
+
+router.get('/add-to-cart/:id', function(req, res, next){
+	var productId = req.params.id;
+	var cart = new Cart(req.session.cart ? req.session.cart: {});
+
+	Produto.findById(productId, function(err, product){
+		if(err){
+			return res.redirect('/');
+		}
+		cart.add(product, product.id);
+		req.session.cart = cart;
+		console.log(req.session.cart);
+		res.redirect('/loja');
+	});
+});
+
+router.get('/shopping-cart', function(req, res, next){
+	if(!req.session.cart){
+		return res.render('produto/shopping-cart', {products: null})
+	}
+	var cart = new Cart(req.session.cart);
+	var keys = Object.keys(cart.items);
+	console.log(cart.items[keys[0]]);
+	res.render('produto/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalpreco});
+});
 
 module.exports = router;

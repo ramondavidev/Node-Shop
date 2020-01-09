@@ -8,6 +8,7 @@ const passport = require('passport');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+const MongoStore = require('connect-mongo')(session);
 
 const indexRouter = require('./routes/index');
 const lojaRouter = require('./routes/loja');
@@ -46,7 +47,9 @@ app.use(methodOverride('_method'));
 app.use(session({
   secret: 'hang ten dude!',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  cookie: { maxAge: 180 * 60 * 1000} //180 is equal to 3 hours
 }));
 
 app.use(passport.initialize());
@@ -58,6 +61,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
   res.locals.currentUser = req.user;
+  res.locals.session = req.session;
   next();
 });
 
