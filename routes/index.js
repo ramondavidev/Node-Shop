@@ -76,12 +76,41 @@ router.get('/shopping-cart', function(req, res, next){
 		return res.render('produto/shopping-cart', {products: null})
 	}
 	var cart = new Cart(req.session.cart);
+	console.log(cart);
+	console.log('-------------------------------------------------------');
 	var keys = Object.keys(cart.items);
 	console.log(cart.items[keys[0]]);
+	console.log('-------------------quantidade----------------------------------');
+	console.log(cart.items[keys[0]].qty);
 	res.render('produto/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalpreco});
 });
 
 router.post('/pay', (req, res) => {
+
+	var cart = new Cart(req.session.cart);
+	var keys = Object.keys(cart.items);
+	console.log(cart);
+
+	var nameItem = cart.items[keys[0]].item.nome;
+	var descricaoItem = cart.items[keys[0]].item.descricao;
+	var precoItem = cart.items[keys[0]].item.preco;
+	var quantidade = cart.items[keys[0]].qty;
+	//console.log('--------------------' + str);
+	//var nameItem = JSON.parse(str);
+
+	var nameItem2 = cart.items[keys[1]].item.nome;
+	var descricaoItem2 = cart.items[keys[1]].item.descricao;
+	var precoItem2 = cart.items[keys[1]].item.preco;
+	var quantidade2 = cart.items[keys[1]].qty;
+
+	const item2 = {
+		"name": nameItem2,
+		"sku": "001",
+		"price": precoItem2,
+		"currency": "BRL",
+		"quantity": quantidade2
+	}
+
 
 	const create_payment_json = {
 	  "intent": "sale",
@@ -95,21 +124,46 @@ router.post('/pay', (req, res) => {
 	  "transactions": [{
 		  "item_list": {
 			  "items": [{
-				  "name": "Red Sox Hat",
+				  "name": nameItem,
 				  "sku": "001",
-				  "price": "25.00",
+				  "price": precoItem,
 				  "currency": "BRL",
-				  "quantity": 1
+				  "quantity": quantidade
 			  }]
 		  },
 		  "amount": {
 			  "currency": "BRL",
-			  "total": "25.00"
+			  "total": cart.totalpreco
 		  },
-		  "description": "Hat for the best team ever"
+		  "description": descricaoItem
 	  }]
   };
-  
+
+  for(var i = 1; i < keys.length; i ++){
+	  var nomeI = cart.items[keys[i]].item.nome;
+	  var precoI = cart.items[keys[i]].item.preco;
+	  var quantidadeI = cart.items[keys[i]].qty;
+	var obj =
+		{
+		"name": nomeI,
+		"sku": "001",
+		"price": precoI,
+		"currency": "BRL",
+		"quantity": quantidadeI
+	}
+	create_payment_json.transactions[0].item_list.items.push(obj);
+}
+
+
+
+  console.log('------------------------------------------------------------');
+
+ 
+
+  console.log('------------------------------------------------------------');
+  console.log(create_payment_json.transactions[0].item_list);
+  console.log('------------------------------------------------------------');
+
   paypal.payment.create(create_payment_json, function (error, payment) {
 	if (error) {
 		throw error;
@@ -125,6 +179,7 @@ router.post('/pay', (req, res) => {
   });
   
   router.get('/success', (req, res) => {
+	var cart = new Cart(req.session.cart);
 	const payerId = req.query.PayerID;
 	const paymentId = req.query.paymentId;
   
@@ -133,7 +188,7 @@ router.post('/pay', (req, res) => {
 	  "transactions": [{
 		  "amount": {
 			  "currency": "BRL",
-			  "total": "25.00"
+			  "total": cart.totalpreco
 		  }
 	  }]
 	};
