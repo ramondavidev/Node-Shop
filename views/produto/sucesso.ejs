@@ -1,0 +1,22 @@
+<% layout('layouts/boilerplate') -%>
+
+<div class="container mt-5">
+    <span class="d-block p-2 bg-primary text-white">Sua compra foi realizada com sucesso!</span>
+    <p>
+        Preço Total: <%= cart.totalpreco %>$
+    </p>
+    <div>
+        <h3>Items</h3>
+        <% var keys = Object.keys(cart.items); %>
+
+        <% for(var i = 0; i < keys.length ; i++){ %>
+            <hr>
+            <p>
+                <%= cart.items[keys[i]].item.nome %> <%= cart.items[keys[i]].item.preco %>$
+            </p>
+        <% } %>
+    </div>
+     <p class="text-info">
+         Passe na loja para retirar seu pedido
+     </p>
+</div>

@@ -98,18 +98,18 @@ router.post('/pay', (req, res) => {
 	//console.log('--------------------' + str);
 	//var nameItem = JSON.parse(str);
 
-	var nameItem2 = cart.items[keys[1]].item.nome;
-	var descricaoItem2 = cart.items[keys[1]].item.descricao;
-	var precoItem2 = cart.items[keys[1]].item.preco;
-	var quantidade2 = cart.items[keys[1]].qty;
+	//var nameItem2 = cart.items[keys[1]].item.nome;
+	//var descricaoItem2 = cart.items[keys[1]].item.descricao;
+	//var precoItem2 = cart.items[keys[1]].item.preco;
+	//var quantidade2 = cart.items[keys[1]].qty;
 
-	const item2 = {
+	/*const item2 = {
 		"name": nameItem2,
 		"sku": "001",
 		"price": precoItem2,
 		"currency": "BRL",
 		"quantity": quantidade2
-	}
+	}*/
 
 
 	const create_payment_json = {
@@ -154,15 +154,11 @@ router.post('/pay', (req, res) => {
 	create_payment_json.transactions[0].item_list.items.push(obj);
 }
 
-
-
-  console.log('------------------------------------------------------------');
-
  
 
-  console.log('------------------------------------------------------------');
-  console.log(create_payment_json.transactions[0].item_list);
-  console.log('------------------------------------------------------------');
+  //console.log('------------------------------------------------------------');
+  //console.log(create_payment_json.transactions[0].item_list);
+  //console.log('------------------------------------------------------------');
 
   paypal.payment.create(create_payment_json, function (error, payment) {
 	if (error) {
@@ -198,8 +194,10 @@ router.post('/pay', (req, res) => {
 		  console.log(error.response);
 		  throw error;
 	  } else {
+		  //ta passando o carrinho e nao os dados do paypal
 		  console.log(JSON.stringify(payment));
-		  res.send('Success');
+		  res.render('produto/sucesso', {cart});
+		  //resetar carrinho aqui
 	  }
   });
   });
