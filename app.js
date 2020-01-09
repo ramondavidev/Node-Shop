@@ -9,6 +9,7 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const MongoStore = require('connect-mongo')(session);
+const paypal = require('paypal-rest-sdk');
 
 const indexRouter = require('./routes/index');
 const lojaRouter = require('./routes/loja');
@@ -58,6 +59,12 @@ app.use(passport.session());
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': 'AdZZ5MbDVacq3FHDNUcAJj55mxig-QU5OI14HZ43tou9svceE_8WSYOiw-fRsIIvqv8bbklFfthKAz_6',
+  'client_secret': 'EKYHbrtxYqoxLqqsdcytvl_kQNxB6ktC586cZgv4QU27KChxWoyRXf76fxUdikVldTqUyfaYUNVdEKAp'
+});
 
 app.use(function(req, res, next){
   res.locals.currentUser = req.user;
