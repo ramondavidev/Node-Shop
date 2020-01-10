@@ -15,7 +15,10 @@ const UserSchema = new Schema({
         numero: String,
         telefone: String,
         cidade: String
-    }
+    },
+    compras: [{
+        type: String,
+    }]
 });
 
 UserSchema.plugin(passportLocalMongoose);

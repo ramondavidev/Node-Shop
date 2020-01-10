@@ -7,7 +7,7 @@ const Cart = require('../models/cart');
 const User = require('../models/user');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
@@ -189,13 +189,22 @@ router.post('/pay', (req, res) => {
 	  }]
 	};
   
-	paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+	paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
 	  if (error) {
 		  console.log(error.response);
 		  throw error;
 	  } else {
 		  //ta passando o carrinho e nao os dados do paypal
 		  console.log(JSON.stringify(payment));
+
+		  let user = await User.findById(req.user.id);
+		  var keys = Object.keys(cart.items);
+			for(var i = 0; i < keys.length; i++){
+				var nome = cart.items[keys[i]].item.nome;
+			user.compras.push(nome);
+			}
+			user.save();
+			req.session.destroy();
 		  res.render('produto/sucesso', {cart});
 		  //resetar carrinho aqui
 	  }
@@ -219,6 +228,13 @@ router.post('/pay', (req, res) => {
 var cart = new Cart(req.session.cart);
 var keys = Object.keys(cart.items);
 */
+
+router.get('/compras', async (req, res, next) =>{
+	const user = await User.findById(req.user._id);
+	console.log(user);
+	res.render('produto/compras', {user});
+});
+
 
 
 

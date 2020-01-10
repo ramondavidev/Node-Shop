@@ -1,0 +1,7 @@
+<% layout('layouts/boilerplate') -%>
+
+
+<h3 class="mt-5">Seu Histórico de compras</h3>
+<% user.compras.forEach(function(compra){ %>
+    <p><%= compra %></p>
+<% }) %>
