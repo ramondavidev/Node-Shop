@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate') -%>
+
+
+<h1>Transacoes</h1>
+
+<% transactions.forEach(function(transacao){ %>
+    <div>
+        <p>
+            <strong>Comprador:</strong> <%= transacao.user %>
+        </p>
+        <p>
+            <% transacao.item.forEach(function(t){ %>
+                <p>
+                    <strong>Produto:</strong> <%= t.produto %>
+                    <%= t.preco %>$
+                </p>
+                <p>
+                    <strong>Quantidade:</strong> <%= t.quantidade %>
+                </p>
+            <% }) %>
+        </p>
+        <p>
+            <strong>Hora da compra:</strong> <%= transacao.horario %>
+        </p>
+    </div>
+    <hr>
+<% }) %>

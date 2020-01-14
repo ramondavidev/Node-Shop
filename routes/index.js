@@ -5,6 +5,14 @@ const paypal = require('paypal-rest-sdk');
 const Produto = require('../models/produto');
 const Cart = require('../models/cart');
 const User = require('../models/user');
+const Transacao = require('../models/transacao');
+
+const {
+	//deleteProfileImage,
+	isLoggedIn
+	//isValidPassword,
+	//changePassword
+} = require('../middleware');
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
@@ -85,7 +93,7 @@ router.get('/shopping-cart', function(req, res, next){
 	res.render('produto/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalpreco});
 });
 
-router.post('/pay', (req, res) => {
+router.post('/pay', isLoggedIn, (req, res) => {
 
 	var cart = new Cart(req.session.cart);
 	var keys = Object.keys(cart.items);
@@ -197,6 +205,7 @@ router.post('/pay', (req, res) => {
 		  //ta passando o carrinho e nao os dados do paypal
 		  console.log(JSON.stringify(payment));
 
+		  //Adicionar compra ao usuário
 		  let user = await User.findById(req.user.id);
 		  var keys = Object.keys(cart.items);
 			for(var i = 0; i < keys.length; i++){
@@ -204,6 +213,26 @@ router.post('/pay', (req, res) => {
 			user.compras.push(nome);
 			}
 			user.save();
+
+			//adicionar a transacoes
+			var keys = Object.keys(req.session.cart.items);
+			var items = new Array();
+			for(var i = 0; i < keys.length; i++){
+				var compra = {
+					produto: req.session.cart.items[keys[i]].item.nome,
+					preco: req.session.cart.items[keys[i]].item.preco,
+					quantidade: req.session.cart.items[keys[i]].qty
+				}
+				items.push(compra);
+			}
+		
+			let transacao = new Transacao({
+				user: req.user.username,
+				item: items,
+				horario: Date.now()
+			});
+			transacao.save();
+
 			req.session.destroy();
 		  res.render('produto/sucesso', {cart});
 		  //resetar carrinho aqui
@@ -229,10 +258,20 @@ var cart = new Cart(req.session.cart);
 var keys = Object.keys(cart.items);
 */
 
-router.get('/compras', async (req, res, next) =>{
+router.get('/compras', isLoggedIn, async (req, res, next) =>{
 	const user = await User.findById(req.user._id);
 	console.log(user);
 	res.render('produto/compras', {user});
+});
+
+router.get('/transacoes', async(req, res, next) => {
+	//var cart = new Cart(cart);
+	
+	//console.log(req.session.cart);
+	//console.log(keys);
+	//console.log(cart);
+	let transactions = await Transacao.find({});
+	res.render('transacoes', {transactions});
 });
 
 
